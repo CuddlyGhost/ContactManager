@@ -1,6 +1,8 @@
+using System.Reflection;
 using ContactManager.Api.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,9 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://example.com/license") // Placeholder for now
         }
     });
+
+    // For descriptions of methods and hiding some fields in the Swagger UI
+    options.EnableAnnotations ();
 });
 
 var app = builder.Build();
@@ -56,15 +61,17 @@ using (var scope = app.Services.CreateScope () )
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    app.UseSwagger      ( options => options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0 );
+    app.UseSwaggerUI    ( options =>
     {
         // Enable middleware to serve generated Swagger as a JSON endpoint.
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.SwaggerEndpoint("./v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
 }
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
