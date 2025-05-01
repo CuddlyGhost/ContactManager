@@ -1,4 +1,16 @@
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
-  "recommendations": ["angular.ng-template"]
+  "recommendations": [
+    // Angular Essentials
+    "angular.ng-template",           				// Angular Language Service
+
+    // Code formatting and linting
+    "esbenp.prettier-vscode",         				// Prettier - Code formatter
+    "dbaeumer.vscode-eslint",        				// ESLint for JS/TS
+
+    // Path Intellisense (auto-completion for file paths)
+    "christian-kohler.path-intellisense",  			// Path Intellisense
+
+    // Git Superpowers
+    "eamodio.gitlens"                				// GitLens (Git superpowers)
+  ]
 }
