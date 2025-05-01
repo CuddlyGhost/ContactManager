@@ -9,9 +9,9 @@ namespace ContactManager.Api.Controllers
     public class ContactController : ControllerBase
     {
 
-        private readonly ContactsDbContext _context;
+        private readonly ContactsDbContext _context; // Inject other services like loggers in the future c:
 
-        public ContactController ( ContactsDbContext context )
+        public ContactController(ContactsDbContext context)
         {
             _context = context;
         }
@@ -21,9 +21,9 @@ namespace ContactManager.Api.Controllers
             Summary = "Retrieves all contacts.",
             Description = "Returns all contacts, or 404 if none were found."
         )]
-        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts ()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            return await _context.Contacts.ToListAsync ();
+            return await _context.Contacts.ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -31,13 +31,13 @@ namespace ContactManager.Api.Controllers
             Summary = "Retrieves a contact by ID.",
             Description = "Returns contact with the provided ID, or 404 if none were found."
         )]
-        public async Task<ActionResult<Contact>> GetContact ( long id )
+        public async Task<ActionResult<Contact>> GetContact(long id)
         {
-            var contact = await _context.Contacts.FindAsync ( id );
+            var contact = await _context.Contacts.FindAsync(id);
 
-            if ( contact == null )
+            if (contact == null)
             {
-                return NotFound ();
+                return NotFound();
             }
 
             return contact;
@@ -48,11 +48,11 @@ namespace ContactManager.Api.Controllers
             Summary = "Creates a contact.",
             Description = "Returns the created contact with status 201."
         )]
-        public async Task<ActionResult<Contact>> CreateContact ( Contact contact )
+        public async Task<ActionResult<Contact>> CreateContact(Contact contact)
         {
-            _context.Contacts.Add ( contact );
-            await _context.SaveChangesAsync ();
-            return CreatedAtAction ( nameof ( GetContact ), new { id = contact.id }, contact );
+            _context.Contacts.Add(contact);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetContact), new { id = contact.ID }, contact);
         }
 
         [HttpPut("{id}")]
@@ -60,25 +60,25 @@ namespace ContactManager.Api.Controllers
             Summary = "Updates a contact by ID.",
             Description = "Returns the updated contact with status 200, or 404 if the desired ID was not found."
         )]
-        public async Task<ActionResult<Contact>> UpdateContact ( long id, Contact updatedContact )
+        public async Task<ActionResult<Contact>> UpdateContact(long id, Contact updatedContact)
         {
-            var currentContactResult = await GetContact ( id );
-            if ( currentContactResult == null )
+            var currentContactResult = await GetContact(id);
+            if (currentContactResult?.Value == null)
             {
-                return NotFound ();
+                return NotFound();
             }
 
             var currentContact = currentContactResult.Value;
 
-            currentContact.firstName    = updatedContact.firstName;
-            currentContact.lastName     = updatedContact.lastName;
-            currentContact.email        = updatedContact.email;
-            currentContact.phone        = updatedContact.phone;
-            currentContact.comment      = updatedContact.comment;
+            currentContact.FirstName = updatedContact.FirstName;
+            currentContact.LastName = updatedContact.LastName;
+            currentContact.Email = updatedContact.Email;
+            currentContact.Phone = updatedContact.Phone;
+            currentContact.Comment = updatedContact.Comment;
 
-            await _context.SaveChangesAsync ();
+            await _context.SaveChangesAsync();
 
-            return Ok ( currentContact );
+            return Ok(currentContact);
         }
 
         [HttpDelete("{id}")]
@@ -86,19 +86,19 @@ namespace ContactManager.Api.Controllers
             Summary = "Deletes a contact by ID.",
             Description = "Returns the a confirmation of the deleted contact with status 200, or status 404 if it was not found."
         )]
-        public async Task<ActionResult> DeleteContact ( long id )
+        public async Task<ActionResult> DeleteContact(long id)
         {
-            var contactResult = await GetContact ( id );
-            if ( contactResult == null )
+            var contactResult = await GetContact(id);
+            if (contactResult?.Value == null)
             {
-                return NotFound ();
+                return NotFound();
             }
 
             var contact = contactResult.Value;
-            _context.Contacts.Remove ( contact );
-            await _context.SaveChangesAsync ();
+            _context.Contacts.Remove(contact);
+            await _context.SaveChangesAsync();
 
-            return Ok ( contact );
+            return Ok(contact);
         }
     }
 }

@@ -1,14 +1,12 @@
-using System.Reflection;
 using ContactManager.Api.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Access DB Context
 builder.Services.AddDbContext<ContactsDbContext>(options =>
-    options.UseSqlServer ( builder.Configuration.GetConnectionString("DefaultConnection") ) );
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Interacting with Frontend
 builder.Services.AddCors(options =>
@@ -46,23 +44,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     // For descriptions of methods and hiding some fields in the Swagger UI
-    options.EnableAnnotations ();
+    options.EnableAnnotations();
 });
 
 var app = builder.Build();
 
 // Database Migrations
-using (var scope = app.Services.CreateScope () )
+using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ContactsDbContext> ();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
     dbContext.Database.Migrate();
 }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger      ( options => options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0 );
-    app.UseSwaggerUI    ( options =>
+    app.UseSwagger(options => options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0);
+    app.UseSwaggerUI(options =>
     {
         // Enable middleware to serve generated Swagger as a JSON endpoint.
         options.SwaggerEndpoint("./v1/swagger.json", "v1");
